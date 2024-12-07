@@ -1,3 +1,4 @@
+using FluentValidation;
 using GameRaitingAPI;
 using GameRaitingAPI.Endpoints;
 using GameRaitingAPI.Repository;
@@ -11,7 +12,10 @@ builder.Services.AddDbContext<AppDbContext>(opciones =>
 
 builder.Services.AddOutputCache();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 app.UseOutputCache();

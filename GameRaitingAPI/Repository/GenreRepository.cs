@@ -29,6 +29,11 @@ namespace GameRaitingAPI.Repository
             return await context.genres.AnyAsync(x => x.Id == id);
         }
 
+        public async Task<bool> Exist(int id, string name)
+        {
+            return await context.genres.AnyAsync(x => x.Id != id && x.Name == name);
+        }
+
         public async Task<List<Genre>> GetAll()
         {
             return await context.genres.OrderBy(x => x.Name).ToListAsync();

@@ -10,6 +10,6 @@ namespace GameRaitingAPI.Repository.IRepository
         Task Update (Genre genre);
         Task Delete(int id);
         Task<bool> Exist (int id);
-      
+        Task<bool> Exist(int id, string name);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Entitie;
+using GameRaitingAPI.Filter;
 using GameRaitingAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OutputCaching;
@@ -13,8 +14,8 @@ namespace GameRaitingAPI.Endpoints
         {
             group.MapGet("/", GetAllGenres).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("genre-get"));
             group.MapGet("/{id:int}", GetGenreById);
-            group.MapPost("/", AddNewGenre);
-            group.MapPut("/{id:int}", UpdateGenre);
+            group.MapPost("/", AddNewGenre).AddEndpointFilter<ValidationFilter<CreateGenreDTO>>();
+            group.MapPut("/{id:int}", UpdateGenre).AddEndpointFilter<ValidationFilter<CreateGenreDTO>>();
             group.MapDelete("/{id:int}", DeleteGenre);
 
             return group;
