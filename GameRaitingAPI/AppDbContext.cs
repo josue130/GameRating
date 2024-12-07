@@ -16,10 +16,14 @@ namespace GameRaitingAPI
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Genre>().Property(g => g.Name).HasMaxLength(50);
-           
+            modelBuilder.Entity<Game>().Property(g => g.Name).HasMaxLength(50);
+            modelBuilder.Entity<Game>().Property(g => g.Photo).IsUnicode();
+
+
         }
 
         public DbSet<Genre> genres { get; set; }
-     
+        public DbSet<Game> games { get; set; }
+
     }
 }
