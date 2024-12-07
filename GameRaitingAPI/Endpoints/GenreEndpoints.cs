@@ -1,4 +1,6 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using AutoMapper;
+using GameRaitingAPI.DTOs;
+using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -17,14 +19,16 @@ namespace GameRaitingAPI.Endpoints
             return group;
         }
 
-        static async Task<Ok<List<Genre>>> GetAllGenres(IGenreRepository repository)
+        static async Task<Ok<List<GenreDTO>>> GetAllGenres(IGenreRepository repository, IMapper mapper)
         {
             List<Genre> genres = await repository.GetAll();
-           
-            return TypedResults.Ok(genres);
+
+            List<GenreDTO> genresDto = mapper.Map<List<GenreDTO>>(genres);
+
+            return TypedResults.Ok(genresDto);
         }
 
-        static async Task<Results<Ok<Genre>,NotFound>> GetGenreById(IGenreRepository repository, int id)
+        static async Task<Results<Ok<GenreDTO>,NotFound>> GetGenreById(IGenreRepository repository, IMapper mapper, int id)
         {
             Genre? genre = await repository.GetById(id);
 
@@ -33,21 +37,26 @@ namespace GameRaitingAPI.Endpoints
                 return TypedResults.NotFound();
             }
 
+            GenreDTO genreDTO = mapper.Map<GenreDTO>(genre);
 
-            return TypedResults.Ok(genre);
+
+            return TypedResults.Ok(genreDTO);
         }
 
-        static async Task<Results<Created<Genre>, ValidationProblem>> AddNewGenre(IGenreRepository repository, Genre genre)
+        static async Task<Results<Created<GenreDTO>, ValidationProblem>> AddNewGenre(IGenreRepository repository
+            , CreateGenreDTO createGenreDTO, IMapper mapper)
         {
-
+            Genre genre = mapper.Map<Genre>(createGenreDTO);
             var id = await repository.Add(genre);
+
+            GenreDTO genreDTO = mapper.Map<GenreDTO>(genre);
             
-            return TypedResults.Created($"/genre/{id}", genre);
+            return TypedResults.Created($"/genre/{id}", genreDTO);
         }
 
 
-        static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateGenre(int id,Genre genre,
-            IGenreRepository repository)
+        static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateGenre(int id,CreateGenreDTO createGenreDTO,
+            IGenreRepository repository, IMapper mapper)
         {
             var exist = await repository.Exist(id);
 
@@ -56,6 +65,7 @@ namespace GameRaitingAPI.Endpoints
                 return TypedResults.NotFound();
             }
 
+            Genre genre = mapper.Map<Genre>(createGenreDTO);
             genre.Id = id;
             await repository.Update(genre);
         

@@ -11,7 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(opciones =>
 
 
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
-
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
