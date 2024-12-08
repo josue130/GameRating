@@ -1,7 +1,11 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using GameRaitingAPI.DTOs;
+using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Repository.IRepository;
+using GameRaitingAPI.Utility;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Net.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GameRaitingAPI.Repository
@@ -9,10 +13,12 @@ namespace GameRaitingAPI.Repository
     public class GameRepository : IGameRepository
     {
         private readonly AppDbContext _context;
-        public GameRepository(AppDbContext context)
+        private readonly HttpContext _httpContext;
+        public GameRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
 
             _context = context;
+            _httpContext = httpContextAccessor.HttpContext!;
 
         }
         public async Task<int> Add(Game game)
@@ -50,9 +56,11 @@ namespace GameRaitingAPI.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Game>> GetAllGames()
+        public async Task<List<Game>> GetAllGames(PaginationDTO paginationDTO)
         {
-            return await _context.games.ToListAsync();
+            var queryable = _context.games.AsQueryable();
+            await _httpContext.InsertCountGamesHeader(queryable);
+            return await queryable.OrderBy(a => a.Name).Pagination(paginationDTO).ToListAsync();
         }
 
         public async Task Update(Game game)

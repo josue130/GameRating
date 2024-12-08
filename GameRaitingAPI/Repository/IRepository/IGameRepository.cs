@@ -1,4 +1,5 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using GameRaitingAPI.DTOs;
+using GameRaitingAPI.Entitie;
 
 namespace GameRaitingAPI.Repository.IRepository
 {
@@ -11,6 +12,6 @@ namespace GameRaitingAPI.Repository.IRepository
         Task<List<int>> Exist(List<int> ids);
         Task<Game?> GetGameById(int id);
         Task<List<Game>> GetGameByName(string name);
-        Task<List<Game>> GetAllGames();
+        Task<List<Game>> GetAllGames(PaginationDTO paginationDTO);
     }
 }
