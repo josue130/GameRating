@@ -50,7 +50,7 @@ namespace GameRaitingAPI.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Game>> ObtenerTodos()
+        public async Task<List<Game>> GetAllGames()
         {
             return await _context.games.ToListAsync();
         }

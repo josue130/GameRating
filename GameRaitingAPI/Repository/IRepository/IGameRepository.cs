@@ -11,6 +11,6 @@ namespace GameRaitingAPI.Repository.IRepository
         Task<List<int>> Exist(List<int> ids);
         Task<Game?> GetGameById(int id);
         Task<List<Game>> GetGameByName(string name);
-        Task<List<Game>> ObtenerTodos();
+        Task<List<Game>> GetAllGames();
     }
 }

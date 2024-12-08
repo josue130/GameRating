@@ -23,6 +23,7 @@ app.UseOutputCache();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGroup("/genres").MapGenres();
+app.MapGroup("/games").MapGames();
 
 
 app.Run();
