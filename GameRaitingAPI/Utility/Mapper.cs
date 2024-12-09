@@ -13,7 +13,11 @@ namespace GameRaitingAPI.Utility
 
             CreateMap<CreateGameDTO, Game>()
                 .ForMember(x => x.Photo, option => option.Ignore()).ReverseMap();
-            CreateMap<Game, GameDTO>().ReverseMap();
+            CreateMap<Game, GameDTO>()
+                .ForMember(g => g.Genres,
+                entitie => entitie.MapFrom(ga => ga.GameGenres.Select(gg =>  new GenreDTO {Id = gg.GenreId
+                ,Name = gg.Genre.Name})))
+                .ReverseMap();
         }
     }
 }

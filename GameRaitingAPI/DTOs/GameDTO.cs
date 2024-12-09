@@ -6,5 +6,7 @@
         public string Name { get; set; } = null!;
         public DateTime ReleaseDate { get; set; }
         public string? Photo { get; set; }
+        public List<GenreDTO> Genres { get; set; } = new List<GenreDTO>();
+
     }
 }

@@ -48,7 +48,11 @@ namespace GameRaitingAPI.Repository
 
         public async Task<Game?> GetGameById(int id)
         {
-            return await _context.games.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.games
+                .Include(g => g.GameGenres)
+                    .ThenInclude(gp => gp.Genre)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<List<Game>> GetGameByName(string name)
