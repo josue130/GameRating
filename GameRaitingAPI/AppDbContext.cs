@@ -19,11 +19,14 @@ namespace GameRaitingAPI
             modelBuilder.Entity<Game>().Property(g => g.Name).HasMaxLength(50);
             modelBuilder.Entity<Game>().Property(g => g.Photo).IsUnicode();
 
+            modelBuilder.Entity<GameGenres>().HasKey(g => new { g.GenreId, g.GameId });
+
 
         }
 
         public DbSet<Genre> genres { get; set; }
         public DbSet<Game> games { get; set; }
+        public DbSet<GameGenres> gameGenres {get;set;}
 
     }
 }
