@@ -1,4 +1,5 @@
-﻿using GameRaitingAPI.DTOs;
+﻿using AutoMapper;
+using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Repository.IRepository;
 using GameRaitingAPI.Utility;
@@ -14,11 +15,13 @@ namespace GameRaitingAPI.Repository
     {
         private readonly AppDbContext _context;
         private readonly HttpContext _httpContext;
-        public GameRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IMapper _mapper;
+        public GameRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
 
             _context = context;
             _httpContext = httpContextAccessor.HttpContext!;
+            _mapper = mapper;
 
         }
         public async Task<int> Add(Game game)
@@ -66,6 +69,21 @@ namespace GameRaitingAPI.Repository
         public async Task Update(Game game)
         {
             _context.Update(game);
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddGenres(int id, List<int> genresIds)
+        {
+            var game = await _context.games.Include(g => g.GameGenres).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (game is null)
+            {
+                throw new ArgumentException($"Game with {id} not found");
+            }
+
+            var gamesGenres = genresIds.Select(genreId => new GameGenres() { GenreId = genreId });
+
+            game.GameGenres = _mapper.Map(gamesGenres, game.GameGenres);
+
             await _context.SaveChangesAsync();
         }
     }

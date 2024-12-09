@@ -11,5 +11,7 @@ namespace GameRaitingAPI.Repository.IRepository
         Task Delete(int id);
         Task<bool> Exist (int id);
         Task<bool> Exist(int id, string name);
+        Task<List<int>> Exist(List<int> ids);
+       
     }
 }

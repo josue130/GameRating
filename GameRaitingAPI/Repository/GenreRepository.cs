@@ -1,4 +1,5 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using AutoMapper;
+using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace GameRaitingAPI.Repository
     public class GenreRepository : IGenreRepository
     {
         private readonly AppDbContext context;
+      
 
         public GenreRepository(AppDbContext context)
         {
@@ -49,5 +51,10 @@ namespace GameRaitingAPI.Repository
             context.Update(genre);
             await context.SaveChangesAsync();       
         }
+        public async Task<List<int>> Exist(List<int> ids)
+        {
+            return await context.genres.Where(g => ids.Contains(g.Id)).Select(g => g.Id).ToListAsync();
+        }
+        
     }
 }

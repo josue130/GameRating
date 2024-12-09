@@ -21,6 +21,7 @@ namespace GameRaitingAPI.Endpoints
             group.MapDelete("/{id:int}", Delete);
             group.MapGet("/get_by_name/{name}", GetGameByName);
             group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
+            group.MapPost("/{id:int}/add_genres", AddGenres);
             return group;
         }
 
@@ -112,6 +113,31 @@ namespace GameRaitingAPI.Endpoints
 
             List<GameDTO> gameDto = mapper.Map<List<GameDTO>>(game);
             return TypedResults.Ok(gameDto);
+        }
+
+        static async Task<Results<NoContent, NotFound, BadRequest<string>>> AddGenres(int id, List<int> genresIds,
+            IGameRepository gameRepository, IGenreRepository genreRepository)
+        {
+            if (!await gameRepository.Exist(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var DBGenres = new List<int>();
+
+            if (genresIds.Count != 0)
+            {
+                DBGenres = await genreRepository.Exist(genresIds);
+            }
+
+            if (DBGenres.Count != genresIds.Count)
+            {
+                var NotFoundGenres = genresIds.Except(DBGenres);
+
+                return TypedResults.BadRequest($"Genres with id {string.Join(",", NotFoundGenres)} not exist.");
+            }
+            await gameRepository.AddGenres(id, genresIds);
+            return TypedResults.NoContent();
         }
 
     }
