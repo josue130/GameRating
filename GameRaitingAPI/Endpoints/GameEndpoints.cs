@@ -13,8 +13,8 @@ namespace GameRaitingAPI.Endpoints
     {
         public static RouteGroupBuilder MapGames(this RouteGroupBuilder group)
         {
-            group.MapPost("/", AddNewGame).DisableAntiforgery();
-            group.MapGet("/", GetAllGames);
+            group.MapPost("/", AddNewGame).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
+            group.MapGet("/", GetAllGames).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("games-get")) ;
             group.MapGet("/{id:int}", GetGameById);
             group.MapDelete("/{id:int}", Delete);
             group.MapGet("/get_by_name/{name}", GetGameByName);
@@ -23,12 +23,12 @@ namespace GameRaitingAPI.Endpoints
         }
 
         static async Task<Results<Created<GameDTO>, ValidationProblem>> AddNewGame([FromForm] CreateGameDTO createGameDTO,
-            IGameRepository repository, IMapper mapper)
+            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore)
         { 
             Game game = mapper.Map<Game>(createGameDTO);
 
             int id = await repository.Add(game);
-
+            await outputCacheStore.EvictByTagAsync("games-get", default);
             GameDTO gameDTO = mapper.Map<GameDTO>(game);
             return TypedResults.Created($"/games/{id}", gameDTO);
         }
@@ -55,7 +55,7 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.Ok(gameDto);
         }
 
-        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository)
+        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository, IOutputCacheStore outputCacheStore)
         {
             Game? gameDB = await repository.GetGameById(id);
 
@@ -65,11 +65,12 @@ namespace GameRaitingAPI.Endpoints
             }
 
             await repository.Delete(id);
+            await outputCacheStore.EvictByTagAsync("games-get", default);
             return TypedResults.NoContent();
         }
 
         static async Task<Results<NoContent, NotFound>> Update(int id,[FromForm] CreateGameDTO createGameDTO,
-            IGameRepository repository, IMapper mapper)
+            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore)
         {
             Game? gameDB = await repository.GetGameById(id);
 
@@ -83,10 +84,11 @@ namespace GameRaitingAPI.Endpoints
             
 
             await repository.Update(game);
-       
+            await outputCacheStore.EvictByTagAsync("games-get", default);
+
             return TypedResults.NoContent();
         }
-        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper, [FromQuery]int page = 1, [FromQuery] int recordsPerPage = 10)
+        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper, [FromQuery]int page = 1, [FromQuery] int recordsPerPage=4)
         {
             var pagination = new PaginationDTO { Page = page, GetRecordsPerPage = recordsPerPage };
             List<Game> game = await repository.GetAllGames(pagination);
