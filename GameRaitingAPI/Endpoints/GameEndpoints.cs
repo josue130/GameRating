@@ -3,6 +3,7 @@ using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Filter;
 using GameRaitingAPI.Repository.IRepository;
+using GameRaitingAPI.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -11,6 +12,7 @@ namespace GameRaitingAPI.Endpoints
 {
     public static class GameEndpoints
     {
+        private static readonly string container = "games";
         public static RouteGroupBuilder MapGames(this RouteGroupBuilder group)
         {
             group.MapPost("/", AddNewGame).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
@@ -18,14 +20,20 @@ namespace GameRaitingAPI.Endpoints
             group.MapGet("/{id:int}", GetGameById);
             group.MapDelete("/{id:int}", Delete);
             group.MapGet("/get_by_name/{name}", GetGameByName);
-            group.MapPut("/{id:int}", Update).DisableAntiforgery();
+            group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
             return group;
         }
 
         static async Task<Results<Created<GameDTO>, ValidationProblem>> AddNewGame([FromForm] CreateGameDTO createGameDTO,
-            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore)
+            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
         { 
             Game game = mapper.Map<Game>(createGameDTO);
+
+            if (createGameDTO.Photo is not null)
+            {
+                string url = await imageStorage.Store(container,createGameDTO.Photo);
+                game.Photo = url;
+            }
 
             int id = await repository.Add(game);
             await outputCacheStore.EvictByTagAsync("games-get", default);
@@ -55,7 +63,8 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.Ok(gameDto);
         }
 
-        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository, IOutputCacheStore outputCacheStore)
+        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository, 
+            IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
         {
             Game? gameDB = await repository.GetGameById(id);
 
@@ -65,12 +74,13 @@ namespace GameRaitingAPI.Endpoints
             }
 
             await repository.Delete(id);
+            await imageStorage.Delete(gameDB.Photo, container);
             await outputCacheStore.EvictByTagAsync("games-get", default);
             return TypedResults.NoContent();
         }
 
         static async Task<Results<NoContent, NotFound>> Update(int id,[FromForm] CreateGameDTO createGameDTO,
-            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore)
+            IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
         {
             Game? gameDB = await repository.GetGameById(id);
 
@@ -78,10 +88,17 @@ namespace GameRaitingAPI.Endpoints
             {
                 return TypedResults.NotFound();
             }
-
+            
             Game game = mapper.Map<Game>(createGameDTO);
             game.Id = id;
-            
+            game.Photo = gameDB.Photo;
+
+            if (createGameDTO.Photo is not null)
+            {
+                string url = await imageStorage.Update(game.Photo,container, createGameDTO.Photo);
+                game.Photo = url;
+            }
+
 
             await repository.Update(game);
             await outputCacheStore.EvictByTagAsync("games-get", default);

@@ -19,7 +19,7 @@ namespace GameRaitingAPI.Validations
         }
         public static string GreaterThanOrEqualToOurDate(DateTime minimumDate)
         {
-            return "Date must be later" + minimumDate.ToString("yyyy-MM-dd");
+            return "Date must be later " + minimumDate.ToString("yyyy-MM-dd");
         }
     }
 }
