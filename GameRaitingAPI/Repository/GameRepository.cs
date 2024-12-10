@@ -3,11 +3,8 @@ using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Repository.IRepository;
 using GameRaitingAPI.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Net.Http;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace GameRaitingAPI.Repository
 {

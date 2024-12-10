@@ -5,12 +5,16 @@ using GameRaitingAPI.Repository;
 using GameRaitingAPI.Repository.IRepository;
 using GameRaitingAPI.Services;
 using GameRaitingAPI.Services.IServices;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(opciones =>
     opciones.UseSqlServer("name=DefaultConnection"));
+
+
+
 
 builder.Services.AddOutputCache();
 builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
