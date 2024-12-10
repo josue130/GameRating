@@ -1,5 +1,6 @@
 ﻿using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Filter;
+using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -58,11 +59,9 @@ namespace GameRaitingAPI.Endpoints
 
             if (result.Succeeded)
             {
-                var response = new LoginResponseDTO
-                {
-                    Token = "",
-                    Expiration = DateTime.Now
-                };
+                var response = await GenerateToken(loginRequestDTO,configuration,userManager);
+
+               
                 return TypedResults.Ok(response);
             }
             else
@@ -71,5 +70,36 @@ namespace GameRaitingAPI.Endpoints
             }
         }
         
+        private async static Task<LoginResponseDTO>
+            GenerateToken(LoginRequestDTO loginRequestDTO,
+            IConfiguration configuration, UserManager<IdentityUser> userManager)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("email", loginRequestDTO.Email),
+                //more claims
+            };
+
+            var usuario = await userManager.FindByNameAsync(loginRequestDTO.Email);
+            var claimsDB = await userManager.GetClaimsAsync(usuario!);
+
+            claims.AddRange(claimsDB);
+
+            var key = Keys.GetSecret(configuration);
+            var creds = new SigningCredentials(key.First(), SecurityAlgorithms.HmacSha256);
+
+            var expiracion = DateTime.UtcNow.AddDays(2);
+
+            var tokenDeSeguridad = new JwtSecurityToken(issuer: null, audience: null, claims: claims,
+                expires: expiracion, signingCredentials: creds);
+
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenDeSeguridad);
+
+            return new LoginResponseDTO
+            {
+                Token = token,
+                Expiration = expiracion
+            };
+        }
     }
 }
