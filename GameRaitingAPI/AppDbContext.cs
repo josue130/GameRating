@@ -20,6 +20,7 @@ namespace GameRaitingAPI
             modelBuilder.Entity<Game>().Property(g => g.Photo).IsUnicode();
 
             modelBuilder.Entity<GameGenres>().HasKey(g => new { g.GenreId, g.GameId });
+            modelBuilder.Entity<Comment>().HasKey(c => new { c.GameId, c.UserId });
 
             modelBuilder.Entity<IdentityUser>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
@@ -33,7 +34,8 @@ namespace GameRaitingAPI
 
         public DbSet<Genre> genres { get; set; }
         public DbSet<Game> games { get; set; }
-        public DbSet<GameGenres> gameGenres {get;set;}
+        public DbSet<GameGenres> gameGenres { get; set; }
+        public DbSet<Comment> comments { get; set; }
 
     }
 }
