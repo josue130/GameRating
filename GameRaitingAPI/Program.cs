@@ -23,6 +23,7 @@ builder.Services.AddIdentity<IdentityUser,IdentityRole>()
 
 builder.Services.AddOutputCache();
 builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
