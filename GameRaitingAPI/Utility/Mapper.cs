@@ -18,6 +18,8 @@ namespace GameRaitingAPI.Utility
                 entitie => entitie.MapFrom(ga => ga.GameGenres.Select(gg =>  new GenreDTO {Id = gg.GenreId
                 ,Name = gg.Genre.Name})))
                 .ReverseMap();
+            CreateMap<CreateCommentDTO, Comment>();
+            CreateMap<Comment, CommentDTO>();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GameRaitingAPI.Repository
         }
         public async Task<int> Add(Comment comment)
         {
-            _context.Add(comment);
+            await _context.AddAsync(comment);
             await _context.SaveChangesAsync();
             return comment.Id;
         }
@@ -39,7 +39,7 @@ namespace GameRaitingAPI.Repository
 
         public async Task<Comment?> GetCommentById(int id)
         {
-            return await _context.comments.FirstOrDefaultAsync(c => c.GameId == id);
+            return await _context.comments.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task Update(Comment comment)
