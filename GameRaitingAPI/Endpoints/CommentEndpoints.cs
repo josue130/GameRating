@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GameRaitingAPI.DTOs;
 using GameRaitingAPI.Entitie;
+using GameRaitingAPI.Filter;
 using GameRaitingAPI.Repository.IRepository;
 using GameRaitingAPI.Services;
 using GameRaitingAPI.Services.IServices;
@@ -18,14 +19,19 @@ namespace GameRaitingAPI.Endpoints
                  c.Expire(TimeSpan.FromSeconds(60))
                  .Tag("get-comments")
                  .SetVaryByRouteValue(new string[] { "gameId" }));
+
             group.MapGet("/{id:int}", GetbyId);
 
-            group.MapPost("/", Create).RequireAuthorization();
+            group.MapPost("/", Create)
+                .RequireAuthorization()
+                .AddEndpointFilter<ValidationFilter<CreateCommentDTO>>();
 
             group.MapPut("/{id:int}", Update)
-                .RequireAuthorization();
+                .RequireAuthorization()
+                .AddEndpointFilter<ValidationFilter<CreateCommentDTO>>();
 
-            group.MapDelete("/{id:int}", Delete).RequireAuthorization();
+            group.MapDelete("/{id:int}", Delete)
+                .RequireAuthorization();
             return group;
         }
         static async Task<Results<Created<CommentDTO>, NotFound, BadRequest<string>>> Create(int gameId,
