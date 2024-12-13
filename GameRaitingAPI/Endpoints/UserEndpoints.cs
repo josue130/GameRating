@@ -17,7 +17,7 @@ namespace GameRaitingAPI.Endpoints
         {
             group.MapPost("/register", Register).AddEndpointFilter<ValidationFilter<RegisterRequestDTO>>();
 
-            group.MapPost("/login", Login);
+            group.MapPost("/login", Login).AddEndpointFilter<ValidationFilter<LoginRequestDTO>>();
                
             return group;
         }
