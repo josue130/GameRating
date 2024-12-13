@@ -15,13 +15,22 @@ namespace GameRaitingAPI.Endpoints
         private static readonly string container = "games";
         public static RouteGroupBuilder MapGames(this RouteGroupBuilder group)
         {
-            group.MapPost("/", AddNewGame).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
+            group.MapPost("/", AddNewGame)
+                .DisableAntiforgery()
+                .AddEndpointFilter<ValidationFilter<CreateGameDTO>>()
+                .RequireAuthorization("admin");
+
             group.MapGet("/", GetAllGames).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("games-get")) ;
             group.MapGet("/{id:int}", GetGameById);
-            group.MapDelete("/{id:int}", Delete);
+            group.MapDelete("/{id:int}", Delete).RequireAuthorization("admin"); 
             group.MapGet("/get_by_name/{name}", GetGameByName);
-            group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
-            group.MapPost("/{id:int}/add_genres", AddGenres);
+
+            group.MapPut("/{id:int}", Update)
+                .DisableAntiforgery()
+                .AddEndpointFilter<ValidationFilter<CreateGameDTO>>()
+                .RequireAuthorization("admin");
+
+            group.MapPost("/{id:int}/add_genres", AddGenres).RequireAuthorization("admin");
             group.MapPost("/{id:int}/add_rating", AddRating);
             return group;
         }

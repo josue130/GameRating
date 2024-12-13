@@ -53,9 +53,11 @@ builder.Services.AddAuthentication(options =>
     };
 
 });
-builder.Services.AddAuthorization();
 
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("admin", policy => policy.RequireClaim("admin"));
+});
 
 var app = builder.Build();
 app.UseSwagger();

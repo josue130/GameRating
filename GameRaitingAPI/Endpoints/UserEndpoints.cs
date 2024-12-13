@@ -18,7 +18,13 @@ namespace GameRaitingAPI.Endpoints
             group.MapPost("/register", Register).AddEndpointFilter<ValidationFilter<RegisterRequestDTO>>();
 
             group.MapPost("/login", Login).AddEndpointFilter<ValidationFilter<LoginRequestDTO>>();
-               
+
+            group.MapPost("/new_admin", AddAdmin);
+
+            group.MapPost("/delete_admin", DeleteAdmin).RequireAuthorization("admin");
+
+
+
             return group;
         }
 
@@ -69,7 +75,33 @@ namespace GameRaitingAPI.Endpoints
                 return TypedResults.BadRequest("incorrect Email or password");
             }
         }
-        
+
+        static async Task<Results<NoContent, NotFound>> AddAdmin(UpdateClaimsDTO updateClaimsDTO,
+            [FromServices] UserManager<IdentityUser> userManager)
+        {
+            var user = await userManager.FindByEmailAsync(updateClaimsDTO.Email);
+            if (user is null)
+            {
+                return TypedResults.NotFound();
+            }
+
+            await userManager.AddClaimAsync(user, new Claim("admin", "true"));
+            return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NoContent, NotFound>> DeleteAdmin(UpdateClaimsDTO updateClaimsDTO,
+           [FromServices] UserManager<IdentityUser> userManager)
+        {
+            var user = await userManager.FindByEmailAsync(updateClaimsDTO.Email);
+            if (user is null)
+            {
+                return TypedResults.NotFound();
+            }
+
+            await userManager.RemoveClaimAsync(user, new Claim("admin", "true"));
+            return TypedResults.NoContent();
+        }
+
         private async static Task<LoginResponseDTO>
             GenerateToken(LoginRequestDTO loginRequestDTO,
             IConfiguration configuration, UserManager<IdentityUser> userManager)

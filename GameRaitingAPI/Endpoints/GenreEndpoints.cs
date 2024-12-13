@@ -14,9 +14,16 @@ namespace GameRaitingAPI.Endpoints
         {
             group.MapGet("/", GetAllGenres).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("genre-get"));
             group.MapGet("/{id:int}", GetGenreById);
-            group.MapPost("/", AddNewGenre).AddEndpointFilter<ValidationFilter<CreateGenreDTO>>();
-            group.MapPut("/{id:int}", UpdateGenre).AddEndpointFilter<ValidationFilter<CreateGenreDTO>>();
-            group.MapDelete("/{id:int}", DeleteGenre);
+
+            group.MapPost("/", AddNewGenre)
+                .AddEndpointFilter<ValidationFilter<CreateGenreDTO>>()
+                .RequireAuthorization("admin");
+
+            group.MapPut("/{id:int}", UpdateGenre)
+                .AddEndpointFilter<ValidationFilter<CreateGenreDTO>>()
+                .RequireAuthorization("admin"); 
+
+            group.MapDelete("/{id:int}", DeleteGenre).RequireAuthorization("admin");
 
             return group;
         }
