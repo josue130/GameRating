@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,15 @@ builder.Services.AddAuthorization(options =>
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.Run(async context =>
+{
+    await TypedResults.BadRequest(
+        new { type = "Error", message = "An unexpected error occurred.", status = 500 })
+    .ExecuteAsync(context);
+}));
+app.UseStatusCodePages();
+
 app.UseStaticFiles();
 app.UseOutputCache();
 app.UseAuthentication();
@@ -72,6 +82,9 @@ app.MapGroup("/genres").MapGenres();
 app.MapGroup("/games").MapGames();
 app.MapGroup("/game/{gameId:int}/comments").MapComments();
 app.MapGroup("/auth").MapUsers();
-
+app.MapGet("/error", () =>
+{
+    throw new InvalidOperationException("error de ejemplo");
+});
 
 app.Run();
