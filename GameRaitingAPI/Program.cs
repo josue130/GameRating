@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using GameRaitingAPI.Utility;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +28,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -48,9 +47,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true, // Valida que token este debidamente firmado con un secret key
+        ValidateIssuerSigningKey = true, 
         IssuerSigningKeys = Keys.GetSecret(builder.Configuration),
-        ClockSkew = TimeSpan.Zero // Para no tener problemas por la diferencia de tiempo
+        ClockSkew = TimeSpan.Zero 
     };
 
 });

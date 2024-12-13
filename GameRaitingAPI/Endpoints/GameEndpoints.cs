@@ -22,6 +22,7 @@ namespace GameRaitingAPI.Endpoints
             group.MapGet("/get_by_name/{name}", GetGameByName);
             group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<ValidationFilter<CreateGameDTO>>();
             group.MapPost("/{id:int}/add_genres", AddGenres);
+            group.MapPost("/{id:int}/add_rating", AddRating);
             return group;
         }
 
@@ -137,6 +138,41 @@ namespace GameRaitingAPI.Endpoints
                 return TypedResults.BadRequest($"Genres with id {string.Join(",", NotFoundGenres)} not exist.");
             }
             await gameRepository.AddGenres(id, genresIds);
+            return TypedResults.NoContent();
+        }
+        static async Task<Results<NoContent, NotFound>> AddRating(int id, AddRatingDTO addRatingDTO,
+            IGameRepository gameRepository, IRatingRepository ratingRepository
+            , IMapper mapper, IUserService userService)
+        {
+            if (!await gameRepository.Exist(id))
+            {
+                return TypedResults.NotFound();
+            }
+            var user = await userService.GetUser();
+
+            if (user is null)
+            {
+                return TypedResults.NotFound();
+            }
+
+
+            var DBRating = await ratingRepository.Exist(user.Id,id);
+
+            if (DBRating is null)
+            {
+                Rating rating = mapper.Map<Rating>(addRatingDTO);
+                rating.GameId = id;
+                rating.UserId = user.Id;
+                await ratingRepository.Add(rating);
+                
+                return TypedResults.NoContent();
+            }
+
+            DBRating.Stars = addRatingDTO.Stars;
+
+            await ratingRepository.Save();
+
+           
             return TypedResults.NoContent();
         }
 

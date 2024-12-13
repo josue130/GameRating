@@ -48,6 +48,8 @@ namespace GameRaitingAPI.Repository
             return await _context.games
                 .Include(g => g.GameGenres)
                     .ThenInclude(gp => gp.Genre)
+                .Include(r => r.Ratings)
+                .AsSplitQuery()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -87,5 +89,6 @@ namespace GameRaitingAPI.Repository
 
             await _context.SaveChangesAsync();
         }
+
     }
 }
