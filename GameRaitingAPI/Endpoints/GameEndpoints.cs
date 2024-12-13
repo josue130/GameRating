@@ -32,6 +32,8 @@ namespace GameRaitingAPI.Endpoints
 
             group.MapPost("/{id:int}/add_genres", AddGenres).RequireAuthorization("admin");
             group.MapPost("/{id:int}/add_rating", AddRating);
+            group.MapGet("/filter", GameFilter);
+
             return group;
         }
 
@@ -184,6 +186,14 @@ namespace GameRaitingAPI.Endpoints
 
            
             return TypedResults.NoContent();
+        }
+
+        static async Task<Ok<List<GameDTO>>> GameFilter(GameFilterDTO gameFilterDTO,
+            IGameRepository repository, IMapper mapper)
+        {
+            var games = await repository.Filter(gameFilterDTO);
+            var gamesDTO = mapper.Map<List<GameDTO>>(games);
+            return TypedResults.Ok(gamesDTO);
         }
 
     }

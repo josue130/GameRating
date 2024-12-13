@@ -14,5 +14,6 @@ namespace GameRaitingAPI.Repository.IRepository
         Task<List<Game>> GetGameByName(string name);
         Task<List<Game>> GetAllGames(PaginationDTO paginationDTO);
         Task AddGenres(int id, List<int> genresIds);
+        Task<List<Game>> Filter(GameFilterDTO gameFilterDTO);
     }
 }
