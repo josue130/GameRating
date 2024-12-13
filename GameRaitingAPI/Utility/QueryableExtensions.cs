@@ -7,8 +7,8 @@ namespace GameRaitingAPI.Utility
         public static IQueryable<T> Pagination<T>(this IQueryable<T> queryable, PaginationDTO paginationDTO)
         {
             return queryable
-                .Skip((paginationDTO.Page - 1) * paginationDTO.GetRecordsPerPage)
-                .Take(paginationDTO.GetRecordsPerPage);
+                .Skip((paginationDTO.Page - 1) * paginationDTO.RecordsPerPage)
+                .Take(paginationDTO.RecordsPerPage);
         }
     }
 }

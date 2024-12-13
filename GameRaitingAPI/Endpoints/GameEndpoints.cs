@@ -116,9 +116,10 @@ namespace GameRaitingAPI.Endpoints
 
             return TypedResults.NoContent();
         }
-        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper, [FromQuery]int page = 1, [FromQuery] int recordsPerPage=4)
+        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper, 
+            PaginationDTO pagination)
         {
-            var pagination = new PaginationDTO { Page = page, GetRecordsPerPage = recordsPerPage };
+           
             List<Game> game = await repository.GetAllGames(pagination);
 
             List<GameDTO> gameDto = mapper.Map<List<GameDTO>>(game);
