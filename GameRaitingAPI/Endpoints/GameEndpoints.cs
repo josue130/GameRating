@@ -4,6 +4,7 @@ using GameRaitingAPI.Entitie;
 using GameRaitingAPI.Filter;
 using GameRaitingAPI.Repository.IRepository;
 using GameRaitingAPI.Services.IServices;
+using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -20,7 +21,11 @@ namespace GameRaitingAPI.Endpoints
                 .AddEndpointFilter<ValidationFilter<CreateGameDTO>>()
                 .RequireAuthorization("admin");
 
-            group.MapGet("/", GetAllGames).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("games-get")) ;
+            group.MapGet("/", GetAllGames)
+                .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("games-get"))
+                .Pagination();
+
+
             group.MapGet("/{id:int}", GetGameById);
             group.MapDelete("/{id:int}", Delete).RequireAuthorization("admin"); 
             group.MapGet("/get_by_name/{name}", GetGameByName);
@@ -32,7 +37,7 @@ namespace GameRaitingAPI.Endpoints
 
             group.MapPost("/{id:int}/add_genres", AddGenres).RequireAuthorization("admin");
             group.MapPost("/{id:int}/add_rating", AddRating);
-            group.MapGet("/filter", GameFilter);
+            group.MapGet("/filter", GameFilter).Filter();
 
             return group;
         }

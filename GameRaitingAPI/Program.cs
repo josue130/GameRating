@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,45 @@ builder.Services.AddIdentity<IdentityUser,IdentityRole>()
 
 builder.Services.AddOutputCache();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( s => {
+    s.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "GameRatingAPI",
+        Description = "With GameRatingAPI, you can rate games, add comments, and view detailed information about them.",
+        Contact = new OpenApiContact
+        {
+            Name = "Josué López Mendoza",
+            Url = new Uri("https://portfoliojlm.netlify.app/")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "MIT",
+            Url = new Uri("https://opensource.org/license/mit/")
+        }
+    });
+    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header
+    });
+    s.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference= new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            }, new string[]{}
+        }
+    });
+});
 builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
@@ -77,14 +116,11 @@ app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "With GameRatingAPI, you can rate games, add comments, and view detailed information about them.");
 app.MapGroup("/genres").MapGenres();
 app.MapGroup("/games").MapGames();
 app.MapGroup("/game/{gameId:int}/comments").MapComments();
 app.MapGroup("/auth").MapUsers();
-app.MapGet("/error", () =>
-{
-    throw new InvalidOperationException("error de ejemplo");
-});
+
 
 app.Run();
