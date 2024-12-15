@@ -12,11 +12,19 @@ using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
+using GameRaitingAPI.GraphQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(opciones =>
     opciones.UseSqlServer("name=DefaultConnection"));
+
+builder.Services.AddGraphQLServer()
+    .AddQueryType<Query>()
+    .AddAuthorization()
+    .AddProjections()
+    .AddFiltering()
+    .AddSorting();
 
 builder.Services.AddIdentity<IdentityUser,IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
@@ -115,6 +123,7 @@ app.UseStaticFiles();
 app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGraphQL();
 
 app.MapGet("/", () => "With GameRatingAPI, you can rate games, add comments, and view detailed information about them.");
 app.MapGroup("/genres").MapGenres();

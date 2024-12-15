@@ -8,6 +8,7 @@ namespace GameRaitingAPI.Entitie
         public string Name { get; set; } = null!;
         public DateTime ReleaseDate { get; set; }
         public string? Photo { get; set; }
+        public List<Comment> Comments { get; set; } = new List<Comment>();
         public List<GameGenres> GameGenres { get; set; } = new List<GameGenres>();
         public List<Rating> Ratings { get; set; } = new List<Rating>();
         [NotMapped]
