@@ -1,4 +1,4 @@
-﻿namespace GameRaitingAPI.Validations
+﻿namespace GameRatingAPI.Validations
 {
     public static class ErrorMessages
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace GameRaitingAPI.Entitie
+namespace GameRatingAPI.Entitie
 {
     public class Comment
     {
@@ -10,6 +10,6 @@ namespace GameRaitingAPI.Entitie
         public string UserId { get; set; } = null!;
         public IdentityUser User { get; set; } = null!;
         public Game Game { get; set; } = null!;
-        
+
     }
 }

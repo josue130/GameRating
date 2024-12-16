@@ -1,7 +1,7 @@
-﻿using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
+﻿using GameRatingAPI.DTOs;
+using GameRatingAPI.Entitie;
 
-namespace GameRaitingAPI.Repository.IRepository
+namespace GameRatingAPI.Repository.IRepository
 {
     public interface IGameRepository
     {

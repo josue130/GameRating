@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
-namespace GameRaitingAPI.Utility
+namespace GameRatingAPI.Utility
 {
     public static class SwaggerExtensions
     {
@@ -44,7 +44,7 @@ namespace GameRaitingAPI.Utility
 
                 options.Parameters.Add(new OpenApiParameter
                 {
-                    Name = "GanreId",
+                    Name = "GenreId",
                     In = ParameterLocation.Query,
                     Schema = new OpenApiSchema
                     {
@@ -60,7 +60,8 @@ namespace GameRaitingAPI.Utility
                     {
                         Type = "string",
                         Enum = new List<IOpenApiAny> { new OpenApiString("Name"),
-                            new OpenApiString("ReleaseDate")}
+                            new OpenApiString("ReleaseDate"),
+                        new OpenApiString("rating")}
                     }
                 });
 

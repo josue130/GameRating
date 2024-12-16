@@ -1,8 +1,8 @@
-﻿using GameRaitingAPI.Services.IServices;
+﻿using GameRatingAPI.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-namespace GameRaitingAPI.Services
+namespace GameRatingAPI.Services
 {
     public class UserService : IUserService
     {

@@ -1,4 +1,4 @@
-﻿namespace GameRaitingAPI.Entitie
+﻿namespace GameRatingAPI.Entitie
 {
     public class GameGenres
     {

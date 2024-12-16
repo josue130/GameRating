@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Repository.IRepository;
+using GameRatingAPI.DTOs;
+using GameRatingAPI.Repository.IRepository;
 
-namespace GameRaitingAPI.Validations
+namespace GameRatingAPI.Validations
 {
     public class CreateGenreDTOValidator : AbstractValidator<CreateGenreDTO>
     {
-        public CreateGenreDTOValidator(IGenreRepository repository, IHttpContextAccessor httpContextAccessor) 
+        public CreateGenreDTOValidator(IGenreRepository repository, IHttpContextAccessor httpContextAccessor)
         {
             var routeValue = httpContextAccessor.HttpContext?.Request.RouteValues["id"];
             var id = 0;

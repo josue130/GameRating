@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace GameRaitingAPI.Utility
+namespace GameRatingAPI.Utility
 {
     public static class HttpContextExtensions
     {

@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Filter;
-using GameRaitingAPI.Repository.IRepository;
+using GameRatingAPI.DTOs;
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Filter;
+using GameRatingAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OutputCaching;
 
-namespace GameRaitingAPI.Endpoints
+namespace GameRatingAPI.Endpoints
 {
     public static class GenreEndpoints
     {
@@ -21,7 +21,7 @@ namespace GameRaitingAPI.Endpoints
 
             group.MapPut("/{id:int}", UpdateGenre)
                 .AddEndpointFilter<ValidationFilter<CreateGenreDTO>>()
-                .RequireAuthorization("admin"); 
+                .RequireAuthorization("admin");
 
             group.MapDelete("/{id:int}", DeleteGenre).RequireAuthorization("admin");
 
@@ -37,7 +37,7 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.Ok(genresDto);
         }
 
-        static async Task<Results<Ok<GenreDTO>,NotFound>> GetGenreById(IGenreRepository repository, IMapper mapper, int id)
+        static async Task<Results<Ok<GenreDTO>, NotFound>> GetGenreById(IGenreRepository repository, IMapper mapper, int id)
         {
             Genre? genre = await repository.GetById(id);
 
@@ -59,12 +59,12 @@ namespace GameRaitingAPI.Endpoints
             var id = await repository.Add(genre);
             await outputCacheStore.EvictByTagAsync("genre-get", default);
             GenreDTO genreDTO = mapper.Map<GenreDTO>(genre);
-            
+
             return TypedResults.Created($"/genre/{id}", genreDTO);
         }
 
 
-        static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateGenre(int id,CreateGenreDTO createGenreDTO,
+        static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateGenre(int id, CreateGenreDTO createGenreDTO,
             IGenreRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore)
         {
             var exist = await repository.Exist(id);

@@ -1,10 +1,10 @@
-﻿using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Repository.IRepository;
+﻿
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace GameRaitingAPI.Repository
+namespace GameRatingAPI.Repository
 {
     public class CommentRepository : ICommentRepository
     {

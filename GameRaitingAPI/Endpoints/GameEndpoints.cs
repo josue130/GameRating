@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Filter;
-using GameRaitingAPI.Repository.IRepository;
-using GameRaitingAPI.Services.IServices;
-using GameRaitingAPI.Utility;
+using GameRatingAPI.DTOs;
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Filter;
+using GameRatingAPI.Repository.IRepository;
+using GameRatingAPI.Services.IServices;
+using GameRatingAPI.Utility;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 
-namespace GameRaitingAPI.Endpoints
+namespace GameRatingAPI.Endpoints
 {
     public static class GameEndpoints
     {
@@ -27,7 +27,7 @@ namespace GameRaitingAPI.Endpoints
 
 
             group.MapGet("/{id:int}", GetGameById);
-            group.MapDelete("/{id:int}", Delete).RequireAuthorization("admin"); 
+            group.MapDelete("/{id:int}", Delete).RequireAuthorization("admin");
             group.MapGet("/get_by_name/{name}", GetGameByName);
 
             group.MapPut("/{id:int}", Update)
@@ -44,12 +44,12 @@ namespace GameRaitingAPI.Endpoints
 
         static async Task<Results<Created<GameDTO>, ValidationProblem>> AddNewGame([FromForm] CreateGameDTO createGameDTO,
             IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
-        { 
+        {
             Game game = mapper.Map<Game>(createGameDTO);
 
             if (createGameDTO.Photo is not null)
             {
-                string url = await imageStorage.Store(container,createGameDTO.Photo);
+                string url = await imageStorage.Store(container, createGameDTO.Photo);
                 game.Photo = url;
             }
 
@@ -81,7 +81,7 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.Ok(gameDto);
         }
 
-        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository, 
+        static async Task<Results<NoContent, NotFound>> Delete(int id, IGameRepository repository,
             IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
         {
             Game? gameDB = await repository.GetGameById(id);
@@ -97,7 +97,7 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NoContent, NotFound>> Update(int id,[FromForm] CreateGameDTO createGameDTO,
+        static async Task<Results<NoContent, NotFound>> Update(int id, [FromForm] CreateGameDTO createGameDTO,
             IGameRepository repository, IMapper mapper, IOutputCacheStore outputCacheStore, IImageStorage imageStorage)
         {
             Game? gameDB = await repository.GetGameById(id);
@@ -106,14 +106,14 @@ namespace GameRaitingAPI.Endpoints
             {
                 return TypedResults.NotFound();
             }
-            
+
             Game game = mapper.Map<Game>(createGameDTO);
             game.Id = id;
             game.Photo = gameDB.Photo;
 
             if (createGameDTO.Photo is not null)
             {
-                string url = await imageStorage.Update(game.Photo,container, createGameDTO.Photo);
+                string url = await imageStorage.Update(game.Photo, container, createGameDTO.Photo);
                 game.Photo = url;
             }
 
@@ -123,10 +123,10 @@ namespace GameRaitingAPI.Endpoints
 
             return TypedResults.NoContent();
         }
-        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper, 
+        static async Task<Ok<List<GameDTO>>> GetAllGames(IGameRepository repository, IMapper mapper,
             PaginationDTO pagination)
         {
-           
+
             List<Game> game = await repository.GetAllGames(pagination);
 
             List<GameDTO> gameDto = mapper.Map<List<GameDTO>>(game);
@@ -173,7 +173,7 @@ namespace GameRaitingAPI.Endpoints
             }
 
 
-            var DBRating = await ratingRepository.Exist(user.Id,id);
+            var DBRating = await ratingRepository.Exist(user.Id, id);
 
             if (DBRating is null)
             {
@@ -181,7 +181,7 @@ namespace GameRaitingAPI.Endpoints
                 rating.GameId = id;
                 rating.UserId = user.Id;
                 await ratingRepository.Add(rating);
-                
+
                 return TypedResults.NoContent();
             }
 
@@ -189,7 +189,7 @@ namespace GameRaitingAPI.Endpoints
 
             await ratingRepository.Save();
 
-           
+
             return TypedResults.NoContent();
         }
 

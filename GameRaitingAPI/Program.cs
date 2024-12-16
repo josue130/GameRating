@@ -1,18 +1,18 @@
 using FluentValidation;
-using GameRaitingAPI;
-using GameRaitingAPI.Endpoints;
-using GameRaitingAPI.Repository;
-using GameRaitingAPI.Repository.IRepository;
-using GameRaitingAPI.Services;
-using GameRaitingAPI.Services.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using GameRaitingAPI.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
-using GameRaitingAPI.GraphQL;
+using GameRatingAPI;
+using GameRatingAPI.Services;
+using GameRatingAPI.Repository;
+using GameRatingAPI.Utility;
+using GameRatingAPI.Endpoints;
+using GameRatingAPI.Repository.IRepository;
+using GameRatingAPI.GraphQL;
+using GameRatingAPI.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 

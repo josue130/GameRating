@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GameRaitingAPI.Entitie
+namespace GameRatingAPI.Entitie
 {
     public class Game
     {
@@ -14,7 +14,7 @@ namespace GameRaitingAPI.Entitie
         [NotMapped]
         public double AverageRating =>
             Ratings.Any() ? Ratings.Average(r => r.Stars) : 0;
-        [NotMapped] 
+        [NotMapped]
         public int TotalRatings => Ratings.Count;
     }
 }

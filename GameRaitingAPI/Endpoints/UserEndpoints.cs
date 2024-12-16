@@ -1,6 +1,6 @@
-﻿using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Filter;
-using GameRaitingAPI.Utility;
+﻿using GameRatingAPI.DTOs;
+using GameRatingAPI.Filter;
+using GameRatingAPI.Utility;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ using Microsoft.Win32;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace GameRaitingAPI.Endpoints
+namespace GameRatingAPI.Endpoints
 {
     public static class UserEndpoints
     {
@@ -28,7 +28,7 @@ namespace GameRaitingAPI.Endpoints
             return group;
         }
 
-        static async Task<Results<NoContent, BadRequest<IEnumerable<IdentityError>>>> 
+        static async Task<Results<NoContent, BadRequest<IEnumerable<IdentityError>>>>
             Register(RegisterRequestDTO registerRequestDTO,
             [FromServices] UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
@@ -65,9 +65,9 @@ namespace GameRaitingAPI.Endpoints
 
             if (result.Succeeded)
             {
-                var response = await GenerateToken(loginRequestDTO,configuration,userManager);
+                var response = await GenerateToken(loginRequestDTO, configuration, userManager);
 
-               
+
                 return TypedResults.Ok(response);
             }
             else

@@ -1,6 +1,6 @@
-﻿using GameRaitingAPI.Utility;
+﻿using GameRatingAPI.Utility;
 
-namespace GameRaitingAPI.DTOs
+namespace GameRatingAPI.DTOs
 {
     public class GameFilterDTO
     {

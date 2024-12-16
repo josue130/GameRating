@@ -1,4 +1,4 @@
-﻿namespace GameRaitingAPI.Services.IServices
+﻿namespace GameRatingAPI.Services.IServices
 {
     public interface IImageStorage
     {

@@ -1,4 +1,4 @@
-﻿namespace GameRaitingAPI.DTOs
+﻿namespace GameRatingAPI.DTOs
 {
     public class CreateGameDTO
     {

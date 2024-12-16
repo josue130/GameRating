@@ -1,7 +1,7 @@
 ﻿
 using FluentValidation;
 
-namespace GameRaitingAPI.Filter
+namespace GameRatingAPI.Filter
 {
     public class ValidationFilter<T> : IEndpointFilter
     {

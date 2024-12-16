@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using GameRaitingAPI.DTOs;
+using GameRatingAPI.DTOs;
 
-namespace GameRaitingAPI.Validations
+namespace GameRatingAPI.Validations
 {
     public class RegisterRequestDTOValidator : AbstractValidator<RegisterRequestDTO>
     {

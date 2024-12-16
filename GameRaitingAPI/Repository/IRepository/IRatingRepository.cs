@@ -1,6 +1,6 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using GameRatingAPI.Entitie;
 
-namespace GameRaitingAPI.Repository.IRepository
+namespace GameRatingAPI.Repository.IRepository
 {
     public interface IRatingRepository
     {

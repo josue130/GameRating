@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using static System.Collections.Specialized.BitVector32;
 
-namespace GameRaitingAPI.Utility
+namespace GameRatingAPI.Utility
 {
     public class Keys
     {
@@ -26,5 +26,5 @@ namespace GameRaitingAPI.Utility
             }
         }
     }
-    
+
 }

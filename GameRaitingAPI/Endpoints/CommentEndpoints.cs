@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Filter;
-using GameRaitingAPI.Repository.IRepository;
-using GameRaitingAPI.Services;
-using GameRaitingAPI.Services.IServices;
+using GameRatingAPI.Services;
+using GameRatingAPI.DTOs;
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Filter;
+using GameRatingAPI.Repository.IRepository;
+using GameRatingAPI.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OutputCaching;
 
-namespace GameRaitingAPI.Endpoints
+namespace GameRatingAPI.Endpoints
 {
     public static class CommentEndpoints
     {
@@ -79,7 +79,7 @@ namespace GameRaitingAPI.Endpoints
             ICommentRepository commentRepository, IGameRepository gameRepository,
             IMapper mapper)
         {
-            
+
             var comment = await commentRepository.GetCommentById(id);
 
             if (comment is null)
@@ -120,7 +120,7 @@ namespace GameRaitingAPI.Endpoints
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NotFound, NoContent, ForbidHttpResult>> Update(int gameId,int id,
+        static async Task<Results<NotFound, NoContent, ForbidHttpResult>> Update(int gameId, int id,
             CreateCommentDTO createCommentDTO, ICommentRepository commentRepository,
             IGameRepository gameRepository, IMapper mapper, IOutputCacheStore outputCacheStore,
             IUserService userService)

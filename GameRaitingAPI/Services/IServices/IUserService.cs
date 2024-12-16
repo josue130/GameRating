@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
-namespace GameRaitingAPI.Services.IServices
+namespace GameRatingAPI.Services.IServices
 {
     public interface IUserService
     {

@@ -1,6 +1,7 @@
-﻿using GameRaitingAPI.Entitie;
+﻿using GameRatingAPI;
+using GameRatingAPI.Entitie;
 
-namespace GameRaitingAPI.GraphQL
+namespace GameRatingAPI.GraphQL
 {
     public class Query
     {

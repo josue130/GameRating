@@ -1,8 +1,9 @@
-﻿using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Repository.IRepository;
+﻿using GameRatingAPI;
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameRaitingAPI.Repository
+namespace GameRatingAPI.Repository
 {
     public class RatingRepository : IRatingRepository
     {
@@ -11,7 +12,7 @@ namespace GameRaitingAPI.Repository
         public RatingRepository(AppDbContext context)
         {
             _context = context;
-            
+
         }
         public async Task<int> Add(Rating rating)
         {

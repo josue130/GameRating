@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using GameRaitingAPI.DTOs;
-using GameRaitingAPI.Entitie;
-using GameRaitingAPI.Repository.IRepository;
-using GameRaitingAPI.Utility;
+using GameRatingAPI;
+using GameRatingAPI.DTOs;
+using GameRatingAPI.Entitie;
+using GameRatingAPI.Repository.IRepository;
+using GameRatingAPI.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 
-namespace GameRaitingAPI.Repository
+namespace GameRatingAPI.Repository
 {
     public class GameRepository : IGameRepository
     {

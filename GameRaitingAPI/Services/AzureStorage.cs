@@ -1,9 +1,9 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
-using GameRaitingAPI.Services.IServices;
 using Path = System.IO.Path;
+using GameRatingAPI.Services.IServices;
 
-namespace GameRaitingAPI.Services
+namespace GameRatingAPI.Services
 {
     public class AzureStorage : IImageStorage
     {

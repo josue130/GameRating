@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace GameRaitingAPI.Entitie
+namespace GameRatingAPI.Entitie
 {
     public class Rating
     {

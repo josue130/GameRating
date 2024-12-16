@@ -1,6 +1,6 @@
-﻿using GameRaitingAPI.DTOs;
+﻿using GameRatingAPI.DTOs;
 
-namespace GameRaitingAPI.Utility
+namespace GameRatingAPI.Utility
 {
     public static class QueryableExtensions
     {
