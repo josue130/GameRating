@@ -14,7 +14,10 @@ Developed using technologies such as .NET 8, C#, ASP.NET Core, and Minimal APIs,
 - GraphQL
 
 ## Technical Highlights
-Developed using ASP.NET Core Minimal APIs, providing a streamlined, high-performance design that is both scalable and easy to maintain.
+Developed using ASP.NET Core Minimal APIs, providing a streamlined, high-performance design that is both scalable and easy to maintain. The application includes advanced features such as filtering and pagination for efficient data handling, and it also supports GraphQL, offering flexible and optimized data queries.
+
+## API Documentation
+The API use Swagger, allowing users to explore, test, and understand all available endpoints interactively. Run the API to access the Swagger UI and view each endpoint in detail including request parameters, responses, and example usage.
 
 ## How to Run
 1. Clone the repository.
