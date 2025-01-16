@@ -13,6 +13,9 @@ using GameRatingAPI.Endpoints;
 using GameRatingAPI.Repository.IRepository;
 using GameRatingAPI.GraphQL;
 using GameRatingAPI.Services.IServices;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +110,19 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("admin", policy => policy.RequireClaim("admin"));
 });
 
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    rateLimiterOptions.AddSlidingWindowLimiter("sliding", options =>
+    {
+        options.PermitLimit = 10;
+        options.Window = TimeSpan.FromSeconds(10);
+        options.SegmentsPerWindow = 2;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 5;
+    });
+});
+
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -120,6 +136,7 @@ app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.Run(async con
 app.UseStatusCodePages();
 
 app.UseStaticFiles();
+app.UseRateLimiter();
 app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();

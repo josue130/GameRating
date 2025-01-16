@@ -12,7 +12,10 @@ namespace GameRatingAPI.Endpoints
     {
         public static RouteGroupBuilder MapGenres(this RouteGroupBuilder group)
         {
-            group.MapGet("/", GetAllGenres).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("genre-get"));
+            group.MapGet("/", GetAllGenres)
+                .RequireRateLimiting("sliding")
+                .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("genre-get"));
+
             group.MapGet("/{id:int}", GetGenreById);
 
             group.MapPost("/", AddNewGenre)
