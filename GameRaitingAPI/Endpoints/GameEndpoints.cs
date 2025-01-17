@@ -22,13 +22,15 @@ namespace GameRatingAPI.Endpoints
                 .RequireAuthorization("admin");
 
             group.MapGet("/", GetAllGames)
+                .RequireRateLimiting("sliding")
                 .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("games-get"))
                 .Pagination();
 
 
             group.MapGet("/{id:int}", GetGameById);
             group.MapDelete("/{id:int}", Delete).RequireAuthorization("admin");
-            group.MapGet("/get_by_name/{name}", GetGameByName);
+            group.MapGet("/get_by_name/{name}", GetGameByName)
+                .RequireRateLimiting("sliding");
 
             group.MapPut("/{id:int}", Update)
                 .DisableAntiforgery()
@@ -36,8 +38,11 @@ namespace GameRatingAPI.Endpoints
                 .RequireAuthorization("admin");
 
             group.MapPost("/{id:int}/add_genres", AddGenres).RequireAuthorization("admin");
-            group.MapPost("/{id:int}/add_rating", AddRating);
-            group.MapGet("/filter", GameFilter).Filter();
+            group.MapPost("/{id:int}/add_rating", AddRating)
+                .RequireRateLimiting("sliding");
+            group.MapGet("/filter", GameFilter)
+                .RequireRateLimiting("sliding")
+                .Filter();
 
             return group;
         }
