@@ -15,14 +15,14 @@ namespace GameRatingAPI.Endpoints
         public static RouteGroupBuilder MapComments(this RouteGroupBuilder group)
         {
             group.MapGet("/", GetAll)
-                 .CacheOutput(c =>
-                 c.Expire(TimeSpan.FromSeconds(60))
-                 .Tag("get-comments")
+                .RequireRateLimiting("sliding")
+                 .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("get-comments")
                  .SetVaryByRouteValue(new string[] { "gameId" }));
 
             group.MapGet("/{id:int}", GetbyId);
 
             group.MapPost("/", Create)
+                .RequireRateLimiting("sliding")
                 .RequireAuthorization()
                 .AddEndpointFilter<ValidationFilter<CreateCommentDTO>>();
 
